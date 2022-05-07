@@ -15,17 +15,27 @@ export class ZipcodeEntryComponent {
   @ViewChild('addLocationButtonRef')
   addLocationButtonRef: StateButtonComponent
 
-  zipcode: string
-  countries
+  countries: string[] = []
+  countryName: string
 
-  constructor(countryService: CountryService,
+  constructor(private countryService: CountryService,
               private locationService: LocationService) {
-    this.countries = countryService.getCountries()
-
+    const countryMap = countryService.getCountryMap()
+    Object.keys(countryMap).forEach((key) => {
+      this.countries.push(countryMap[key])
+    })
   }
 
-  addLocation(zipcode: string){
-    this.addLocationButtonRef.subscribeToObservable(this.locationService.addLocation(zipcode));
+  addLocation(zipcode: string, countryName: string) {
+    if (countryName) {
+      const countryIso2Code = this.countryService.getCountryIso2Code(countryName)
+      if (countryIso2Code) {
+        const location = `${zipcode},${countryIso2Code}`
+        this.addLocationButtonRef.subscribeToObservable(
+          this.locationService.addLocation(location)
+        );
+      }
+    }
   }
 
 }

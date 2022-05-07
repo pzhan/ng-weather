@@ -37,6 +37,7 @@ export class AutocompleteComponent {
 
   _onItemClick(value) {
     this.value = value
+    this.valueChange.emit(value)
     this._isDropdownDisplayed = false
   }
 

@@ -21,7 +21,7 @@ export class CurrentConditionsComponent {
               private router: Router) {
   }
 
-  showForecast(zipcode : string){
-    this.router.navigate(['/forecast', zipcode])
+  showForecast(location: string){
+    this.router.navigate(['/forecast', location])
   }
 }

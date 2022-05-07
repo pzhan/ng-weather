@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 
-const COUNTRIES = {
+const COUNTRY_MAP = {
   "AF": "Afghanistan",
   "AX": "Aland Islands",
   "AL": "Albania",
@@ -252,7 +252,16 @@ const COUNTRIES = {
 @Injectable()
 export class CountryService {
 
-  getCountries() {
-    return COUNTRIES
+  getCountryMap() {
+    return COUNTRY_MAP
   }
+
+  getCountryIso2Code(countryName: string) {
+    for (let countryKey of Object.keys(COUNTRY_MAP)) {
+      if (countryName && COUNTRY_MAP[countryKey].toLowerCase() === countryName.toLowerCase().trim()) {
+        return countryKey
+      }
+    }
+  }
+
 }

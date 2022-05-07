@@ -8,6 +8,7 @@ import {
 } from 'rxjs'
 
 import { tap } from 'rxjs/operators'
+import { WeatherCondition } from '../shared/interfaces/weather-condition'
 import { HttpWeatherService } from './http-weather.service'
 
 // Now only manages weather state
@@ -16,36 +17,36 @@ export class WeatherService {
 
   private static updateDelay = 30000
 
-  private currentConditions = [];
+  private currentConditions: WeatherCondition[] = [];
   private currentConditions$ = new ReplaySubject<any[]>(1)
   private intervalSubscription
 
   constructor(private httpWeatherService: HttpWeatherService) {
   }
 
-  addCurrentConditions(zipcode: string): Observable<any> {
-    const currentCondition$ = new Subject()
-    this.httpWeatherService.getCurrentConditions(zipcode)
+  addCurrentConditions(location: string): Observable<WeatherCondition> {
+    const currentCondition$ = new Subject<WeatherCondition>()
+    this.httpWeatherService.getCurrentConditions(location)
       .subscribe(data => {
-        this.currentConditions.push({zip: zipcode, data: data})
+        this.currentConditions.push({location: location, data: data})
         this.currentConditions$.next(this.currentConditions)
-        currentCondition$.next(data)
+        currentCondition$.next({location: location, data: data})
       }
     )
 
     return currentCondition$
   }
 
-  removeCurrentConditions(zipcode: string): void {
+  removeCurrentConditions(location: string): void {
     for (let i in this.currentConditions){
-      if (this.currentConditions[i].zip === zipcode) {
+      if (this.currentConditions[i].location === location) {
         this.currentConditions.splice(+i, 1);
         this.currentConditions$.next(this.currentConditions)
       }
     }
   }
 
-  getCurrentConditions(): Observable<any[]> {
+  getCurrentConditions(): Observable<WeatherCondition[]> {
     return this.currentConditions$;
   }
 
@@ -55,8 +56,8 @@ export class WeatherService {
       const obsArray = []
       this.currentConditions.forEach((condition) => {
         obsArray.push(
-          this.httpWeatherService.getCurrentConditions(condition.zip)
-            .pipe(tap((data) => { newCurrentConditions.push({zip: condition.zip, data: data})}))
+          this.httpWeatherService.getCurrentConditions(condition.location)
+            .pipe(tap((data) => { newCurrentConditions.push({location: condition.location, data: data})}))
         )
       })
       // wait for all new weather conditions to be retrieved and then emit update state

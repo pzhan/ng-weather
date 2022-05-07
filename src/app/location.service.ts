@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs'
+import { WeatherCondition } from '../shared/interfaces/weather-condition'
 import {WeatherService} from "./weather.service";
 
 export const LOCATIONS : string = "locations";
@@ -7,9 +8,9 @@ export const LOCATIONS : string = "locations";
 @Injectable()
 export class LocationService {
 
-  locations : string[] = [];
+  locations: string[] = [];
 
-  constructor(private weatherService : WeatherService) {
+  constructor(private weatherService: WeatherService) {
     let locString = localStorage.getItem(LOCATIONS);
     if (locString)
       this.locations = JSON.parse(locString);
@@ -17,18 +18,18 @@ export class LocationService {
       this.weatherService.addCurrentConditions(loc);
   }
 
-  addLocation(zipcode : string): Observable<any> {
-    this.locations.push(zipcode);
+  addLocation(location: string): Observable<WeatherCondition> {
+    this.locations.push(location);
     localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
-    return this.weatherService.addCurrentConditions(zipcode);
+    return this.weatherService.addCurrentConditions(location);
   }
 
-  removeLocation(zipcode : string){
-    let index = this.locations.indexOf(zipcode);
+  removeLocation(location: string) {
+    let index = this.locations.indexOf(location);
     if (index !== -1){
       this.locations.splice(index, 1);
       localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
-      this.weatherService.removeCurrentConditions(zipcode);
+      this.weatherService.removeCurrentConditions(location);
     }
   }
 }

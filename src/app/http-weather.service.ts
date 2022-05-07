@@ -1,11 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-
-export interface WeatherCondition {
-  zip: string
-  data: any
-}
+import { WeatherCondition } from '../shared/interfaces/weather-condition'
 
 @Injectable()
 export class HttpWeatherService {
@@ -16,13 +12,13 @@ export class HttpWeatherService {
 
   constructor(private http: HttpClient) { }
 
-  getCurrentConditions(zipcode: string): Observable<WeatherCondition> {
-    return this.http.get<WeatherCondition>(`${HttpWeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${HttpWeatherService.APPID}`)
+  getCurrentConditions(location: string): Observable<WeatherCondition> {
+    return this.http.get<WeatherCondition>(`${HttpWeatherService.URL}/weather?zip=${location}&units=imperial&APPID=${HttpWeatherService.APPID}`)
   }
 
-  getForecast(zipcode: string): Observable<any> {
+  getForecast(location: string): Observable<any> {
     // Here we make a request to get the forecast data from the API. Note the use of backticks and an expression to insert the zipcode
-    return this.http.get(`${HttpWeatherService.URL}/forecast/daily?zip=${zipcode},us&units=imperial&cnt=5&APPID=${HttpWeatherService.APPID}`);
+    return this.http.get(`${HttpWeatherService.URL}/forecast/daily?zip=${location}&units=imperial&cnt=5&APPID=${HttpWeatherService.APPID}`);
   }
 
   getWeatherIcon(id){
