@@ -3,7 +3,6 @@ import {
   Input
 } from '@angular/core'
 import { HttpWeatherService } from '../http-weather.service'
-import {WeatherService} from "../weather.service";
 import {LocationService} from "../location.service";
 import {Router} from "@angular/router";
 

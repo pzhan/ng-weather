@@ -2,7 +2,6 @@ import {
   Component,
   OnDestroy
 } from '@angular/core'
-import { Subscription } from 'rxjs'
 import { WeatherService } from '../weather.service'
 
 @Component({
@@ -11,23 +10,15 @@ import { WeatherService } from '../weather.service'
 })
 export class MainPageComponent implements OnDestroy {
 
-  currentConditions = []
-  subscriptions: Subscription[] = []
+  currentConditions$
 
   constructor(private weatherService: WeatherService) {
-    this.currentConditions = this.weatherService.getCurrentConditions()
-    this.subscriptions.push(
-      this.weatherService.getUpdated$()
-        .subscribe(() => {
-          this.currentConditions = this.weatherService.getCurrentConditions()
-        })
-    )
+    weatherService.startUpdates()
+    this.currentConditions$ = weatherService.getCurrentConditions()
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((sub) => {
-      sub.unsubscribe()
-    })
+    this.weatherService.stopUpdates()
   }
 
 }

@@ -3,7 +3,7 @@ import {
   forkJoin,
   interval,
   Observable,
-  Subject
+  ReplaySubject
 } from 'rxjs'
 
 import { tap } from 'rxjs/operators'
@@ -16,37 +16,36 @@ export class WeatherService {
   private static updateDelay = 30000
 
   private currentConditions = [];
-  private updated$ = new Subject<boolean>()
+  private currentConditions$ = new ReplaySubject<any[]>(1)
+  private intervalSubscription
 
   constructor(private httpWeatherService: HttpWeatherService) {
-    this.init()
   }
 
   addCurrentConditions(zipcode: string): void {
     this.httpWeatherService.getCurrentConditions(zipcode)
-      .subscribe(data => this.currentConditions.push({zip: zipcode, data: data})
+      .subscribe(data => {
+        this.currentConditions.push({zip: zipcode, data: data})
+        this.currentConditions$.next(this.currentConditions)
+      }
     )
   }
 
-  removeCurrentConditions(zipcode: string) {
+  removeCurrentConditions(zipcode: string): void {
     for (let i in this.currentConditions){
-      if (this.currentConditions[i].zip == zipcode)
+      if (this.currentConditions[i].zip === zipcode) {
         this.currentConditions.splice(+i, 1);
+        this.currentConditions$.next(this.currentConditions)
+      }
     }
   }
 
-  getCurrentConditions(): any[] {
-    return this.currentConditions;
+  getCurrentConditions(): Observable<any[]> {
+    return this.currentConditions$;
   }
 
-  getUpdated$(): Observable<boolean> {
-    return this.updated$
-  }
-
-  private init() {
-    interval(WeatherService.updateDelay).subscribe(() => {
-      // [zhanp] there seems to be no api to retrieve multiple condition at once
-      // should be ok anyway since through user interface we won't have a large number of conditions to retrieve
+  startUpdates() {
+    this.intervalSubscription = interval(WeatherService.updateDelay).subscribe(() => {
       const newCurrentConditions = []
       const obsArray = []
       this.currentConditions.forEach((condition) => {
@@ -58,9 +57,13 @@ export class WeatherService {
       // wait for all new weather conditions to be retrieved and then emit update state
       forkJoin(obsArray).subscribe(() => {
         this.currentConditions = newCurrentConditions
-        this.updated$.next(true)
+        this.currentConditions$.next(this.currentConditions)
       })
     })
+  }
+
+  stopUpdates() {
+    this.intervalSubscription.unsubscribe()
   }
 
 }
