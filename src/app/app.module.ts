@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
+import { HttpWeatherService } from './http-weather.service'
 import { ZipcodeEntryComponent } from './zipcode-entry/zipcode-entry.component';
 import {LocationService} from "./location.service";
 import { ForecastsListComponent } from './forecasts-list/forecasts-list.component';
@@ -31,7 +32,7 @@ import { environment } from '../environments/environment';
     routing,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [LocationService, WeatherService],
+  providers: [LocationService, WeatherService, HttpWeatherService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
