@@ -10,15 +10,15 @@ import { WeatherService } from '../weather.service'
 })
 export class MainPageComponent implements OnDestroy {
 
-  currentConditions$
+  _currentConditions$
 
-  constructor(private weatherService: WeatherService) {
-    weatherService.startUpdates()
-    this.currentConditions$ = weatherService.getCurrentConditions()
+  constructor(private _weatherService: WeatherService) {
+    _weatherService.startUpdates()
+    this._currentConditions$ = _weatherService.getCurrentConditions()
   }
 
   ngOnDestroy() {
-    this.weatherService.stopUpdates()
+    this._weatherService.stopUpdates()
   }
 
 }

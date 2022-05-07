@@ -4,12 +4,11 @@ import {
 } from '@angular/core'
 
 @Pipe({
-  name:  'highlightText',
-  pure: true
+  name: 'highlightText',
 })
 export class HighlightTextPipe implements PipeTransform {
 
-  transform(text: string, searchValue) {
-    return text.replace(new RegExp(`(${searchValue})`, 'gi'), '<b>$1</b>')
+  transform(text: string, highlightedText: string) {
+    return text.replace(new RegExp(`(${highlightedText})`, 'gi'), '<b>$1</b>')
   }
 }

@@ -8,7 +8,7 @@ import { HighlightTextPipe } from './autocomplete/highlight-text.pipe'
 import { CountryService } from './country.service'
 import { StateButtonComponent } from './state-button/state-button.component'
 import { HttpWeatherService } from './http-weather.service'
-import { ZipcodeEntryComponent } from './zipcode-entry/zipcode-entry.component';
+import { LocationEntryComponent } from './location-entry/location-entry.component';
 import {LocationService} from "./location.service";
 import { ForecastsListComponent } from './forecasts-list/forecasts-list.component';
 import {WeatherService} from "./weather.service";
@@ -23,7 +23,7 @@ import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
-    ZipcodeEntryComponent,
+    LocationEntryComponent,
     ForecastsListComponent,
     CurrentConditionsComponent,
     MainPageComponent,

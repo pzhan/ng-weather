@@ -1,0 +1,12 @@
+<div class="well">
+  <div style="width: 200px">
+    <app-autocomplete placeholder="Country" [items]="_countries" [(value)]="_countryName"></app-autocomplete>
+    <input type="text" #zipcode placeholder="Zipcode" class="form-control" style="margin-top: 5px;">
+  </div>
+  <br>
+  <app-state-button #addLocationButtonRef (click)="_addLocation(zipcode.value, _countryName)">
+    <button class="btn btn-primary" ready>Add location</button>
+    <button class="btn" disabled running>Adding...</button>
+    <button class="btn btn-success" disabled done>Done</button>
+  </app-state-button>
+</div>
