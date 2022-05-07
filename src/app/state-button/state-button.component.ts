@@ -15,6 +15,7 @@ export class StateButtonComponent {
 
   ButtonState = ButtonState
   _state: ButtonState = ButtonState.READY
+  private static readyDelay = 500
 
   subscribeToObservable(obs: Observable<any>) {
     if (!obs) {
@@ -25,7 +26,12 @@ export class StateButtonComponent {
       this._state = ButtonState.DONE
       setTimeout(() => {
         this._state = ButtonState.READY
-      }, 500)
+      }, StateButtonComponent.readyDelay)
+    }, () => {
+      alert('Location not found!')
+      setTimeout(() => {
+        this._state = ButtonState.READY
+      }, StateButtonComponent.readyDelay)
     })
   }
 }

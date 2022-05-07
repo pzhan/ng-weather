@@ -15,61 +15,64 @@ import { HttpWeatherService } from './http-weather.service'
 @Injectable()
 export class WeatherService {
 
-  private static updateDelay = 30000
+  private static _updateDelay = 30000
 
-  private currentConditions: WeatherCondition[] = [];
-  private currentConditions$ = new ReplaySubject<any[]>(1)
-  private intervalSubscription
+  private _currentConditions: WeatherCondition[] = [];
+  private _currentConditions$ = new ReplaySubject<any[]>(1)
+  private _intervalSubscription
 
-  constructor(private httpWeatherService: HttpWeatherService) {
+  constructor(private _httpWeatherService: HttpWeatherService) {
   }
 
   addCurrentConditions(location: string): Observable<WeatherCondition> {
     const currentCondition$ = new Subject<WeatherCondition>()
-    this.httpWeatherService.getCurrentConditions(location)
+    this._httpWeatherService.getCurrentConditions(location)
       .subscribe(data => {
-        this.currentConditions.push({location: location, data: data})
-        this.currentConditions$.next(this.currentConditions)
+        this._currentConditions.push({location: location, data: data})
+        this._currentConditions$.next(this._currentConditions)
         currentCondition$.next({location: location, data: data})
-      }
+      },
+        (error) => {
+          currentCondition$.error(error)
+        }
     )
 
     return currentCondition$
   }
 
   removeCurrentConditions(location: string): void {
-    for (let i in this.currentConditions){
-      if (this.currentConditions[i].location === location) {
-        this.currentConditions.splice(+i, 1);
-        this.currentConditions$.next(this.currentConditions)
+    for (let i in this._currentConditions){
+      if (this._currentConditions[i].location === location) {
+        this._currentConditions.splice(+i, 1);
+        this._currentConditions$.next(this._currentConditions)
       }
     }
   }
 
   getCurrentConditions(): Observable<WeatherCondition[]> {
-    return this.currentConditions$;
+    return this._currentConditions$;
   }
 
   startUpdates() {
-    this.intervalSubscription = interval(WeatherService.updateDelay).subscribe(() => {
+    this._intervalSubscription = interval(WeatherService._updateDelay).subscribe(() => {
       const newCurrentConditions = []
       const obsArray = []
-      this.currentConditions.forEach((condition) => {
+      this._currentConditions.forEach((condition) => {
         obsArray.push(
-          this.httpWeatherService.getCurrentConditions(condition.location)
+          this._httpWeatherService.getCurrentConditions(condition.location)
             .pipe(tap((data) => { newCurrentConditions.push({location: condition.location, data: data})}))
         )
       })
       // wait for all new weather conditions to be retrieved and then emit update state
       forkJoin(obsArray).subscribe(() => {
-        this.currentConditions = newCurrentConditions
-        this.currentConditions$.next(this.currentConditions)
+        this._currentConditions = newCurrentConditions
+        this._currentConditions$.next(this._currentConditions)
       })
     })
   }
 
   stopUpdates() {
-    this.intervalSubscription.unsubscribe()
+    this._intervalSubscription.unsubscribe()
   }
 
 }
