@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs'
 import {WeatherService} from "./weather.service";
 
 export const LOCATIONS : string = "locations";
@@ -16,10 +17,10 @@ export class LocationService {
       this.weatherService.addCurrentConditions(loc);
   }
 
-  addLocation(zipcode : string){
+  addLocation(zipcode : string): Observable<any> {
     this.locations.push(zipcode);
     localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
-    this.weatherService.addCurrentConditions(zipcode);
+    return this.weatherService.addCurrentConditions(zipcode);
   }
 
   removeLocation(zipcode : string){

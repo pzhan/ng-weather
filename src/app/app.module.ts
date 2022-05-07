@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
+import { StateButtonComponent } from './state-button/state-button.component'
 import { HttpWeatherService } from './http-weather.service'
 import { ZipcodeEntryComponent } from './zipcode-entry/zipcode-entry.component';
 import {LocationService} from "./location.service";
@@ -22,7 +23,8 @@ import { environment } from '../environments/environment';
     ZipcodeEntryComponent,
     ForecastsListComponent,
     CurrentConditionsComponent,
-    MainPageComponent
+    MainPageComponent,
+    StateButtonComponent
   ],
   imports: [
     BrowserModule,

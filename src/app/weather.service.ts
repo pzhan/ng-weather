@@ -3,7 +3,8 @@ import {
   forkJoin,
   interval,
   Observable,
-  ReplaySubject
+  ReplaySubject,
+  Subject
 } from 'rxjs'
 
 import { tap } from 'rxjs/operators'
@@ -22,13 +23,17 @@ export class WeatherService {
   constructor(private httpWeatherService: HttpWeatherService) {
   }
 
-  addCurrentConditions(zipcode: string): void {
+  addCurrentConditions(zipcode: string): Observable<any> {
+    const currentCondition$ = new Subject()
     this.httpWeatherService.getCurrentConditions(zipcode)
       .subscribe(data => {
         this.currentConditions.push({zip: zipcode, data: data})
         this.currentConditions$.next(this.currentConditions)
+        currentCondition$.next(data)
       }
     )
+
+    return currentCondition$
   }
 
   removeCurrentConditions(zipcode: string): void {
