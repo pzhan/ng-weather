@@ -1,0 +1,11 @@
+<ng-container [ngSwitch]="_state">
+  <ng-container *ngSwitchCase="ButtonState.READY">
+    <ng-content select="[ready]"></ng-content>
+  </ng-container>
+  <ng-container *ngSwitchCase="ButtonState.RUNNING">
+    <ng-content select="[running]"></ng-content>
+  </ng-container>
+  <ng-container *ngSwitchCase="ButtonState.DONE">
+    <ng-content select="[done]"></ng-content>
+  </ng-container>
+</ng-container>

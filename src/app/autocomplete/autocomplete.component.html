@@ -1,0 +1,12 @@
+<input type="text"
+       class="form-control"
+       [placeholder]="placeholder"
+       [(ngModel)]="value"
+       (ngModelChange)="valueChange.emit($event)"
+       (focus)="_onFocus()"
+>
+<div *ngIf="_suggestedItems && _suggestedItems.length > 0 && _isDropdownDisplayed" class="app-dropdown">
+  <div *ngFor="let i of _suggestedItems" class="app-dropdown__item" (click)="_onItemClick(i)">
+    <span [innerHTML]="i | highlightText: value"></span>
+  </div>
+</div>

@@ -3,7 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { ZipcodeEntryComponent } from './zipcode-entry/zipcode-entry.component';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component'
+import { HighlightTextPipe } from './autocomplete/highlight-text.pipe'
+import { CountryService } from './country.service'
+import { StateButtonComponent } from './state-button/state-button.component'
+import { HttpWeatherService } from './http-weather.service'
+import { LocationEntryComponent } from './location-entry/location-entry.component';
 import {LocationService} from "./location.service";
 import { ForecastsListComponent } from './forecasts-list/forecasts-list.component';
 import {WeatherService} from "./weather.service";
@@ -18,10 +23,13 @@ import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
-    ZipcodeEntryComponent,
+    LocationEntryComponent,
     ForecastsListComponent,
     CurrentConditionsComponent,
-    MainPageComponent
+    MainPageComponent,
+    StateButtonComponent,
+    AutocompleteComponent,
+    HighlightTextPipe
   ],
   imports: [
     BrowserModule,
@@ -31,7 +39,7 @@ import { environment } from '../environments/environment';
     routing,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [LocationService, WeatherService],
+  providers: [LocationService, WeatherService, HttpWeatherService, CountryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
