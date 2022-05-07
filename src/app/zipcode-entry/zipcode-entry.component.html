@@ -1,8 +1,9 @@
 <div class="well">
-  <h2>Enter a zipcode:</h2>
-  <input type="text" #zipcode placeholder="Zipcode" class="form-control">
+  <div style="width: 200px">
+    <app-autocomplete placeholder="Zipcode" [(value)]="zipcode" [items]="['France', 'Afghanistan', 'China']"></app-autocomplete>
+  </div>
   <br>
-  <app-state-button #addLocationButtonRef (click)="addLocation(zipcode.value)">
+  <app-state-button #addLocationButtonRef (click)="addLocation(zipcode)">
     <button class="btn btn-primary" ready>Add location</button>
     <button class="btn" disabled running>Adding...</button>
     <button class="btn btn-success" disabled done>Done</button>

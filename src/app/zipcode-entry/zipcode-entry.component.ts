@@ -2,6 +2,7 @@ import {
   Component,
   ViewChild
 } from '@angular/core'
+import { CountryService } from '../country.service'
 import { StateButtonComponent } from '../state-button/state-button.component'
 import { LocationService } from '../location.service'
 
@@ -14,7 +15,14 @@ export class ZipcodeEntryComponent {
   @ViewChild('addLocationButtonRef')
   addLocationButtonRef: StateButtonComponent
 
-  constructor(private locationService: LocationService) { }
+  zipcode: string
+  countries
+
+  constructor(countryService: CountryService,
+              private locationService: LocationService) {
+    this.countries = countryService.getCountries()
+
+  }
 
   addLocation(zipcode: string){
     this.addLocationButtonRef.subscribeToObservable(this.locationService.addLocation(zipcode));
